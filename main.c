@@ -6,19 +6,21 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 12:18:40 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/26 21:43:16 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/27 21:28:32 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void print_args(char **argv);
+
 int	main(int argc, char **argv, char **env)
 {
+
 	int		fd[2];
 	pid_t	pid;
 	int		status;
-	char *str;
-
+print_args(argv);
 	status = 0;
 	if (argc == 5)
 	{
@@ -28,49 +30,42 @@ int	main(int argc, char **argv, char **env)
 		if (pid == -1)
 			handle_error("fork");
 		if (pid == 0)
-		{
-			status = child1_process(fd, argv, env);
-			str = ft_itoa(status);
-		write(2, "h1\n", 3);
-		write(2, str, ft_strlen(str));
-			exit(status);
-		}
-		str = ft_itoa(status);
-		write(2, "h2\n", 3);
-		write(2, str, ft_strlen(str));
-
-		// pid = fork();
-		// if (pid == 0)
-		// 	child2_process(fd, argv, env);
-		child2_process(fd, argv, env);
+			child1_process(fd, argv, env);
+		pid = fork();
+		if (pid == -1)
+			handle_error("fork");
+		if (pid == 0)
+			child2_process(fd, argv, env);
 		close(fd[0]);
 		close(fd[1]);
-		// wait(NULL);
-		waitpid(pid, &status, 0);
-		str = ft_itoa(status);
-		write(2, "h3\n", 3);
-		write(2, str, ft_strlen(str));
-
-		// WIFEXITED(status);
-		if (WIFEXITED(status))
-			status = WEXITSTATUS(status);// Get the exit status of the child process
+		// waitpid(-1, &status, WNOHANG); //check
+		waitpid(pid, &status, 0); //check
+		if (WIFEXITED(status)) //WIFEXITED(status) : returns true if the child terminated normally.
+			status = WEXITSTATUS(status);//WEXITSTATUS(status) : returns the exit status of the child. This macro should be employed only if WIFEXITED returned true.
 		else
 			status = EXIT_FAILURE;// Maybe set an appropriate error code// Handle if the child process did not exit normally
 	}
 	else
-		status = EXIT_FAILURE;// Handle incorrect command line arguments
-	return status;	// Return the status from the main function
+		proper_input();
+	return (status);
+}
+
+void	proper_input(void)
+{
+	printf("Acceptable input: ./pipex filein \"cmd1\" \"cmd2\" fileout\n");
+	exit(EXIT_FAILURE);
 }
 
 void	handle_error(char *str)
 {
-	// (void)str;
 	perror(str);
+	// if (str)
+	// 	free(str);
 	exit(127);
 }
 
-//dorker valgrind --leak-check=full --trace-children=yes 
-//  ./pipex file1.txt "ls -lah" "grep a" fileout.txt
+//dorker valgrind --leak-check=full --trace-children=yes ./pipex in.txt "ls -lah" "grep a" out
+//dorker valgrind --leak-check=full --trace-children=yes --show-leak-kinds=all -s ./pipex in.txt "ls" "cat" out
 /*
 echo $?
 
@@ -85,3 +80,14 @@ path not found: No such file or directory
 bash: grepp: command not found
 bash: grepp: command not found
 */
+
+void print_args(char **argv)
+{
+	int i = 0;
+
+	while(argv[i])
+	{
+		printf("argv[%i] = %s\n", i, argv[i]);
+		i++;
+	}
+}

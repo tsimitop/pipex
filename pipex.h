@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 20:09:13 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/26 21:08:50 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/27 20:15:24 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,7 @@ void	execute(char *cmd, char *argv, char **env);
 char	*get_directory_name(char *argv);
 // void	free_split(char **str);
 // int		ft_printf(const char *str, ...);
+void	proper_input(void);
+void	failed_command(char *argv, int *fd);
 
 #endif
