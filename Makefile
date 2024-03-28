@@ -2,7 +2,7 @@
 #									CONSTANTS								   #
 ################################################################################
 CC = gcc
-DEBUG = -g
+# DEBUG = -g
 CFLAGS = -Wall -Wextra -Werror -g
 LIBS = libft.h pipex.h
 LIBFT_PATH = ./Libft
@@ -20,7 +20,7 @@ OBJ = $(SRC:.c=.o)
 all : $(LIBFT) $(NAME)
 
 $(NAME) : $(OBJ)
-	@$(CC) $(DEBUG) $^ $(LDFLAGS) -o $@
+	@$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 
 $(OBJ) : %.o : %.c
 	@$(CC) -c $(CFLAGS) -I$(LIBFT_PATH) $< -o $@

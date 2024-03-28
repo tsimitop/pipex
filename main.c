@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 12:18:40 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/27 21:28:32 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/28 19:28:30 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **env)
 	int		fd[2];
 	pid_t	pid;
 	int		status;
-print_args(argv);
+// print_args(argv);
 	status = 0;
 	if (argc == 5)
 	{
@@ -38,12 +38,18 @@ print_args(argv);
 			child2_process(fd, argv, env);
 		close(fd[0]);
 		close(fd[1]);
-		// waitpid(-1, &status, WNOHANG); //check
 		waitpid(pid, &status, 0); //check
 		if (WIFEXITED(status)) //WIFEXITED(status) : returns true if the child terminated normally.
+		{
 			status = WEXITSTATUS(status);//WEXITSTATUS(status) : returns the exit status of the child. This macro should be employed only if WIFEXITED returned true.
+			// printf("WIFEXITED status = %i\n", status);
+		}
 		else
+		{
+			// printf("1 else status = %i\n", status);
 			status = EXIT_FAILURE;// Maybe set an appropriate error code// Handle if the child process did not exit normally
+			// printf("2 else status = %i\n", status);
+		}
 	}
 	else
 		proper_input();
@@ -65,7 +71,10 @@ void	handle_error(char *str)
 }
 
 //dorker valgrind --leak-check=full --trace-children=yes ./pipex in.txt "ls -lah" "grep a" out
-//dorker valgrind --leak-check=full --trace-children=yes --show-leak-kinds=all -s ./pipex in.txt "ls" "cat" out
+//dorker valgrind --leak-check=full --trace-children=yes --show-leak-kinds=all -s
+//--track-fds=yes
+//-----valgrind --leak-check=full --trace-children=yes --track-origins=yes -s ./pipex in.txt "grep hi" "grep hello" out
+// dorker valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all -s ./pipex in.txt \"grep hi\" \"grep hello\" out
 /*
 echo $?
 
