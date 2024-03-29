@@ -1,8 +1,7 @@
 ################################################################################
 #									CONSTANTS								   #
 ################################################################################
-CC = gcc
-# DEBUG = -g
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 LIBS = libft.h pipex.h
 LIBFT_PATH = ./Libft
@@ -11,9 +10,14 @@ LDFLAGS = -L $(LIBFT_PATH) -lft
 
 NAME = pipex
 
+################################################################################
+#									MAIN PART								   #
+################################################################################
+
 SRC =	main.c\
 		path.c\
-		processes.c
+		processes.c\
+		errors_close.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -26,13 +30,13 @@ $(OBJ) : %.o : %.c
 	@$(CC) -c $(CFLAGS) -I$(LIBFT_PATH) $< -o $@
 
 clean :
+	@echo "Removing $(OBJ)"
 	@rm -f $(OBJ)
 	@make -C $(LIBFT_PATH) clean
 
 fclean : clean
 	@echo "Removing $(NAME)"
 	@rm -f $(NAME)
-	@echo "Removed $(NAME)"
 	@make -C $(LIBFT_PATH) fclean
 
 re : fclean all

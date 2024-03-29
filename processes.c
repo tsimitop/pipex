@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 11:57:42 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/27 21:23:12 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/29 17:02:35 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,15 @@ int	child1_process(int *fd, char **argv, char **env)
 	char	*cmd;
 	char	*ret_str;
 
-	close(fd[0]);
-	input_file = open(argv[1], O_RDONLY, 0644); //bash does not create, text to open and werite
+	input_file = open(argv[1], O_RDONLY);
 	if (input_file == -1 || access(argv[1], F_OK) == -1)
 	{
 		ret_str = ft_strjoin("pipex: ", argv[1]);
 		if (!ret_str)
-			return (0); // check leaks and exit value	
-		handle_error(ret_str); // return proper value
+			return (0);
+		handle_error(ret_str);
 	}
-	if (access(argv[1], R_OK) == -1)
-		handle_error("file is not readable"); // return proper value && you don't have permission to read / permission denied
+	close(fd[0]);
 	dup2(input_file, STDIN_FILENO);
 	close(input_file);
 	dup2(fd[1], STDOUT_FILENO);
@@ -37,7 +35,6 @@ int	child1_process(int *fd, char **argv, char **env)
 		failed_command(argv[2], fd);
 	execute(cmd, argv[2], env);
 	close(fd[1]);
-	perror("pipex"); //meh
 	exit(EXIT_FAILURE);
 }
 
@@ -51,7 +48,7 @@ void	failed_command(char *argv, int *fd)
 		return ;
 	ret_str = ft_strjoin("pipex: ", small_cmd);
 	if (!ret_str)
-		return ; // check leaks and exit value	
+		return ;
 	ret_str = ft_strjoin(ret_str, ": command not found\n");
 	write(2, ret_str, ft_strlen(ret_str));
 	close(fd[1]);
@@ -64,13 +61,17 @@ void	child2_process(int *fd, char **argv, char **env)
 {
 	int		output_file;
 	char	*cmd;
+	char	*ret_str;
 
-	close(fd[1]);
 	output_file = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (output_file == -1 || access(argv[4], F_OK) == -1)
-			handle_error("file does not exist"); // return proper value
-	if (access(argv[4], W_OK) == -1)
-		handle_error("file is not writable"); // return proper value && you don't have permission to write / permission denied
+	{
+		ret_str = ft_strjoin("pipex: ", argv[4]);
+		if (!ret_str)
+			return ;
+		handle_error(ret_str);
+	}
+	close(fd[1]);
 	dup2(output_file, STDOUT_FILENO);
 	close(output_file);
 	dup2(fd[0], STDIN_FILENO);
@@ -79,6 +80,5 @@ void	child2_process(int *fd, char **argv, char **env)
 	if (!cmd)
 		failed_command(argv[3], fd);
 	execute(cmd, argv[3], env);
-	perror("pipex");
 	exit(EXIT_FAILURE);
 }
