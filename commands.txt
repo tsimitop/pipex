@@ -26,3 +26,12 @@ path not found: No such file or directory
 bash: grepp: command not found
 bash: grepp: command not found
 */
+
+./pipex in.txt "grepp hi" "grep hello" out PROBLEM chmod 000 out
+
+./pipex in.txt "grepp hi" "grep hello" out
+pipex: out: Permission denied
+pipex: grepp: command not found
+echo $?
+1
+

@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 12:18:40 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/29 17:01:06 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/29 20:48:22 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	main(int argc, char **argv, char **env)
 {
-
 	int		fd[2];
 	pid_t	pid;
 	int		status;
@@ -39,4 +38,10 @@ int	main(int argc, char **argv, char **env)
 	else
 		proper_input();
 	return (status);
+}
+
+void	proper_input(void)
+{
+	ft_printf("Acceptable input: ./pipex filein \"cmd1\" \"cmd2\" fileout\n");
+	exit(EXIT_FAILURE);
 }

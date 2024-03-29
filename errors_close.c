@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 17:00:41 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/29 17:04:21 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/29 20:48:05 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,16 @@ int	handle_exit(int status)
 	return (status);
 }
 
-void	proper_input(void)
-{
-	ft_printf("Acceptable input: ./pipex filein \"cmd1\" \"cmd2\" fileout\n");
-	exit(EXIT_FAILURE);
-}
-
 void	handle_error(char *str)
 {
 	perror(str);
+	exit(EXIT_FAILURE);
+}
+
+void	handle_error_free(char *str)
+{
+	perror(str);
+	if (str)
+		free(str);
 	exit(EXIT_FAILURE);
 }

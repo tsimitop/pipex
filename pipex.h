@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 20:09:13 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/29 17:01:35 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/29 20:47:18 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>
 
 void	handle_error(char *str);
+void	handle_error_free(char *str);
 int		child1_process(int *fd, char **argv, char **env);
 void	child2_process(int *fd, char **argv, char **env);
 void	parent_process(int *fd, char **argv, char **env);

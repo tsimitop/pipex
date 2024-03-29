@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 11:54:35 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/29 17:04:36 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/29 20:47:02 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,21 @@ char	*iter_env(char *path, char *argv)
 		ret_str = ft_strjoin("pipex: ", argv);
 		if (!ret_str)
 			return (NULL);
-		handle_error(ret_str);
+		handle_error_free(ret_str);
 	}
 	argv = ft_strjoin("/", small_cmd);
 	env_split = ft_split(path + 5, ':');
 	while (env_split[i])
 	{
 		cmd = ft_strjoin(env_split[i], argv);
+		if (!cmd)
+			return (NULL);
 		if (access(cmd, X_OK) != -1)
-			return (free_split(env_split), free(small_cmd), cmd);
+			return (free_split(env_split), free(small_cmd), free(argv), cmd);
 		i++;
+		free(cmd);
 	}
-	return (free_split(env_split), free(small_cmd), NULL);
+	return (free_split(env_split), free(small_cmd), free(argv), NULL);
 }
 
 void	execute(char *cmd, char *argv, char **env)

@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/21 17:49:10 by tsimitop          #+#    #+#             */
-/*   Updated: 2023/10/28 13:42:28 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/29 18:22:33 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,18 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	i = 0;
 	j = 0;
+	if (!s1)
+		return ((char *)s2);
+	if (!s2)
+		return ((char *)s1);
 	ptr = (char *)malloc((ft_strlen(s1) + ft_strlen(s2)) + 1);
 	if (!ptr)
 		return (NULL);
 	while (s1[i] != '\0')
-	{
-		ptr[j] = s1[i];
-		j++;
-		i++;
-	}
+		ptr[j++] = s1[i++];
 	i = 0;
 	while (s2[i] != '\0')
-	{
-		ptr[j] = s2[i];
-		j++;
-		i++;
-	}
+		ptr[j++] = s2[i++];
 	ptr[j] = '\0';
 	return (ptr);
 }

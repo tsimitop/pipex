@@ -6,7 +6,7 @@
 /*   By: tsimitop <tsimitop@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 11:57:42 by tsimitop          #+#    #+#             */
-/*   Updated: 2024/03/29 17:02:35 by tsimitop         ###   ########.fr       */
+/*   Updated: 2024/03/29 20:46:31 by tsimitop         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	child1_process(int *fd, char **argv, char **env)
 		ret_str = ft_strjoin("pipex: ", argv[1]);
 		if (!ret_str)
 			return (0);
-		handle_error(ret_str);
+		handle_error_free(ret_str);
 	}
 	close(fd[0]);
 	dup2(input_file, STDIN_FILENO);
@@ -42,18 +42,22 @@ void	failed_command(char *argv, int *fd)
 {
 	char	*ret_str;
 	char	*small_cmd;
+	char	*temp;
 
 	small_cmd = get_directory_name(argv);
 	if (!small_cmd)
 		return ;
-	ret_str = ft_strjoin("pipex: ", small_cmd);
+	temp = ft_strjoin("pipex: ", small_cmd);
+	if (!temp)
+		return (free(small_cmd));
+	ret_str = ft_strjoin(temp, ": command not found\n");
 	if (!ret_str)
-		return ;
-	ret_str = ft_strjoin(ret_str, ": command not found\n");
+		return (free(small_cmd), free(temp));
 	write(2, ret_str, ft_strlen(ret_str));
 	close(fd[1]);
 	free(small_cmd);
 	free(ret_str);
+	free(temp);
 	exit(127);
 }
 
@@ -69,7 +73,7 @@ void	child2_process(int *fd, char **argv, char **env)
 		ret_str = ft_strjoin("pipex: ", argv[4]);
 		if (!ret_str)
 			return ;
-		handle_error(ret_str);
+		handle_error_free(ret_str);
 	}
 	close(fd[1]);
 	dup2(output_file, STDOUT_FILENO);
