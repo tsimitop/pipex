@@ -1,8 +1,0 @@
-h
-in
-hi
-hello
-bye
-hello hi
-bye hi
-cola
